@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AppSnapr — On-Device AI App Builder</title>
+  <title>AppSnapr — AI App Builder</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,7 +30,70 @@
       overflow: hidden;
     }
 
-    /* ── Header ───────────────────────────────────── */
+    /* ── API Key screen ───────────────────────────────── */
+    #apikey-screen {
+      position: fixed;
+      inset: 0;
+      background: rgba(10,10,10,0.98);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 100;
+      backdrop-filter: blur(4px);
+    }
+    #apikey-screen h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.06em;
+    }
+    #apikey-screen .apikey-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    #apikey-input {
+      width: 340px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 14px;
+      color: var(--text);
+      font-size: 0.92rem;
+      outline: none;
+      font-family: 'Fira Code', monospace;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    #apikey-input:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.08);
+    }
+    #apikey-input::placeholder { color: #3a3a3a; }
+    #apikey-submit {
+      width: 340px;
+      background: linear-gradient(135deg, var(--cyan), var(--violet));
+      border: none;
+      border-radius: 8px;
+      padding: 11px 22px;
+      color: #000;
+      font-weight: 800;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    #apikey-submit:hover { opacity: 0.9; transform: translateY(-1px); }
+    #apikey-note {
+      color: #3a3a3a;
+      font-size: 0.72rem;
+      max-width: 300px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ── Header ───────────────────────────────────────── */
     header {
       display: flex;
       align-items: center;
@@ -80,8 +143,21 @@
       box-shadow: 0 0 10px rgba(247,201,72,0.25);
       background: rgba(247,201,72,0.06);
     }
+    .btn-settings {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      padding: 3px 9px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+      font-family: inherit;
+      margin-left: 8px;
+    }
+    .btn-settings:hover { border-color: var(--violet); color: var(--violet); }
 
-    /* ── Prompt bar ───────────────────────────────── */
+    /* ── Prompt bar ───────────────────────────────────── */
     .prompt-bar {
       display: flex;
       gap: 10px;
@@ -126,7 +202,7 @@
     }
     .btn-generate:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
 
-    /* ── Example chips ────────────────────────────── */
+    /* ── Example chips ────────────────────────────────── */
     .examples {
       display: flex;
       align-items: center;
@@ -155,7 +231,7 @@
       background: rgba(0,229,255,0.05);
     }
 
-    /* ── Panels ───────────────────────────────────── */
+    /* ── Panels ───────────────────────────────────────── */
     .panels {
       display: flex;
       flex: 1;
@@ -199,7 +275,7 @@
     .btn-icon:hover { border-color: var(--cyan); color: var(--cyan); }
     .btn-icon:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* ── Code panel ───────────────────────────────── */
+    /* ── Code panel ───────────────────────────────────── */
     #code-panel {
       margin: 0;
       border-radius: 0;
@@ -226,7 +302,7 @@
       font-family: system-ui, sans-serif;
     }
 
-    /* ── Preview panel ────────────────────────────── */
+    /* ── Preview panel ────────────────────────────────── */
     #preview-iframe {
       flex: 1;
       border: none;
@@ -250,62 +326,7 @@
     .btn-download:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
     .btn-download:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* ── Loading overlay ──────────────────────────── */
-    #loading-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10,10,10,0.97);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 18px;
-      z-index: 100;
-      backdrop-filter: blur(4px);
-    }
-    #loading-overlay h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, var(--cyan), var(--violet));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.06em;
-    }
-    #loading-overlay .loading-sub {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    .progress-wrap {
-      width: 340px;
-      height: 5px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    #progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--cyan), var(--violet));
-      border-radius: 3px;
-      transition: width 0.4s ease;
-    }
-    #loading-status {
-      color: #555;
-      font-size: 0.78rem;
-      min-height: 1.2em;
-      max-width: 340px;
-      text-align: center;
-      line-height: 1.4;
-    }
-    .loading-note {
-      font-size: 0.72rem;
-      color: #3a3a3a;
-      max-width: 300px;
-      text-align: center;
-      line-height: 1.5;
-    }
-
-    /* ── Edit bar ────────────────────────────────────── */
+    /* ── Edit bar ────────────────────────────────────────── */
     #edit-bar {
       display: none;
       align-items: center;
@@ -354,33 +375,6 @@
     }
     #btn-edit:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
     #btn-edit:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
-
-    /* ── WebGPU error ─────────────────────────────── */
-    #webgpu-error {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 14px;
-      text-align: center;
-      padding: 40px;
-      z-index: 200;
-    }
-    #webgpu-error .err-icon { font-size: 2.5rem; }
-    #webgpu-error h2 { color: #f87171; font-size: 1.15rem; }
-    #webgpu-error p { color: var(--muted); max-width: 420px; line-height: 1.65; font-size: 0.9rem; }
-    #webgpu-error a { color: var(--cyan); text-decoration: none; }
-    #webgpu-error a:hover { text-decoration: underline; }
-    #webgpu-error code {
-      background: var(--surface);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 0.85em;
-      color: var(--yellow);
-    }
   </style>
 
   <!-- Prism.js syntax highlighting -->
@@ -390,43 +384,24 @@
 </head>
 <body>
 
-  <!-- ── WebGPU error screen ───────────────────────────── -->
-  <div id="webgpu-error">
-    <div class="err-icon">⚠️</div>
-    <h2>WebGPU Not Available</h2>
-    <p>
-      AppSnapr runs a real AI model directly on your GPU — no server, no API key needed.
-      Please open this file in <a href="https://www.google.com/chrome/" target="_blank">Chrome 113+</a>
-      and make sure <strong>Hardware Acceleration</strong> is enabled in
-      <code>Settings → System</code>.
-    </p>
-    <p style="margin-top:6px;">
-      You can also enable WebGPU at <code>chrome://flags/#enable-unsafe-webgpu</code>.
-    </p>
-  </div>
-
-  <!-- ── Loading overlay ───────────────────────────────── -->
-  <div id="loading-overlay">
+  <!-- ── API Key screen ─────────────────────────────────── -->
+  <div id="apikey-screen" style="display:none">
     <h2>⚡ AppSnapr</h2>
-    <p class="loading-sub">Loading AI model onto your device...</p>
-    <div class="progress-wrap">
-      <div id="progress-bar"></div>
-    </div>
-    <div id="loading-status">Initializing...</div>
-    <p class="loading-note">
-      First visit downloads ~2.2 GB to your browser cache.
-      After that, the model loads instantly — no internet needed.
-    </p>
+    <p class="apikey-sub">Enter your Anthropic API key to get started</p>
+    <input id="apikey-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" />
+    <button id="apikey-submit">Start Building ▶</button>
+    <p id="apikey-note">Your key is stored in your browser only and sent directly to Anthropic's API.</p>
   </div>
 
   <!-- ── Header ────────────────────────────────────────── -->
   <header>
     <h1>⚡ AppSnapr</h1>
-    <span class="header-sub">On-device AI &nbsp;·&nbsp; No account &nbsp;·&nbsp; No server</span>
+    <span class="header-sub">Claude AI &nbsp;·&nbsp; No server &nbsp;·&nbsp; Works everywhere</span>
     <div class="lang-badges">
       <span class="badge" id="badge-html">HTML</span>
       <span class="badge" id="badge-js">JS</span>
     </div>
+    <button class="btn-settings" id="btn-settings" title="Change API key">⚙ Key</button>
   </header>
 
   <!-- ── Prompt bar ─────────────────────────────────────── -->
@@ -466,7 +441,7 @@
       <pre id="code-panel"><code id="code-el" class="language-html"><span class="placeholder-msg">Your generated code will appear here...</span></code></pre>
     </div>
 
-    <!-- Preview panel — always a live running app -->
+    <!-- Preview panel -->
     <div class="panel">
       <div class="panel-header">
         <span>LIVE PREVIEW</span>
@@ -483,7 +458,7 @@
     <input
       id="edit-input"
       type="text"
-      placeholder='Tell the bot what to change — e.g. "make it dark mode", "add a reset button", "fix the bug where..."'
+      placeholder='Tell Claude what to change — e.g. "make it dark mode", "add a reset button", "fix the bug where..."'
       autocomplete="off"
       spellcheck="false"
     />
@@ -492,37 +467,60 @@
 
   <!-- ── Main script ────────────────────────────────────── -->
   <script type="module">
-    import * as webllm from 'https://esm.run/@mlc-ai/web-llm';
-
-    // ── Model ──────────────────────────────────────────────
-    // Qwen2.5-Coder-7B is purpose-built for code — much better app quality.
-    // Requires ~4 GB VRAM. If it fails to load, fall back to the smaller model below.
-    const MODEL_ID = 'Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC';
-    // const MODEL_ID = 'Phi-3.5-mini-instruct-q4f16_1-MLC'; // fallback for low VRAM
 
     // ── DOM refs ───────────────────────────────────────────
-    const overlay      = document.getElementById('loading-overlay');
-    const statusEl     = document.getElementById('loading-status');
-    const progressEl   = document.getElementById('progress-bar');
-    const btnGen       = document.getElementById('btn-generate');
-    const webgpuErr    = document.getElementById('webgpu-error');
-    const codePanel    = document.getElementById('code-panel');
-    const codeEl       = document.getElementById('code-el');
-    const previewFrame = document.getElementById('preview-iframe');
-    const btnDownload  = document.getElementById('btn-download');
-    const btnCopy      = document.getElementById('btn-copy');
-    const editBar      = document.getElementById('edit-bar');
-    const editInput    = document.getElementById('edit-input');
-    const btnEdit      = document.getElementById('btn-edit');
+    const apikeyScreen  = document.getElementById('apikey-screen');
+    const apikeyInput   = document.getElementById('apikey-input');
+    const apikeySubmit  = document.getElementById('apikey-submit');
+    const btnSettings   = document.getElementById('btn-settings');
+    const btnGen        = document.getElementById('btn-generate');
+    const codePanel     = document.getElementById('code-panel');
+    const codeEl        = document.getElementById('code-el');
+    const previewFrame  = document.getElementById('preview-iframe');
+    const btnDownload   = document.getElementById('btn-download');
+    const btnCopy       = document.getElementById('btn-copy');
+    const editBar       = document.getElementById('edit-bar');
+    const editInput     = document.getElementById('edit-input');
+    const btnEdit       = document.getElementById('btn-edit');
 
     // ── State ──────────────────────────────────────────────
-    let engine      = null;
+    let apiKey      = localStorage.getItem('appsnapr-api-key') || '';
     let currentCode = '';
     let currentLang = 'html';
 
+    // ── API key management ─────────────────────────────────
+    function showKeyScreen() {
+      apikeyScreen.style.display = 'flex';
+      btnGen.disabled = true;
+      apikeyInput.value = '';
+      apikeyInput.focus();
+    }
+
+    function hideKeyScreen() {
+      apikeyScreen.style.display = 'none';
+      btnGen.disabled = false;
+    }
+
+    if (!apiKey) {
+      showKeyScreen();
+    } else {
+      hideKeyScreen();
+    }
+
+    apikeySubmit.addEventListener('click', saveKey);
+    apikeyInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
+
+    function saveKey() {
+      const key = apikeyInput.value.trim();
+      if (!key) return;
+      apiKey = key;
+      localStorage.setItem('appsnapr-api-key', key);
+      hideKeyScreen();
+    }
+
+    btnSettings.addEventListener('click', showKeyScreen);
+
     // ── System prompts ─────────────────────────────────────
-    // Always outputs a single self-contained HTML file so the preview
-    // is always a live, usable, interactive app in the iframe.
     const SYSTEM_PROMPT = `You are a senior web developer. Output a single self-contained HTML file for the requested app.
 
 FORMAT RULES (critical):
@@ -552,36 +550,58 @@ Rules:
 2. Apply the requested change precisely. Keep everything else working exactly as it was.
 3. The entire file must remain fully functional after your edit.`;
 
-    // ── WebGPU check ───────────────────────────────────────
-    if (!navigator.gpu) {
-      overlay.style.display = 'none';
-      webgpuErr.style.display = 'flex';
-      throw new Error('WebGPU not available');
-    }
+    // ── SSE streaming helper ───────────────────────────────
+    async function* streamCompletion(systemPrompt, messages) {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+        },
+        body: JSON.stringify({
+          model: 'claude-opus-4-7',
+          max_tokens: 16000,
+          stream: true,
+          system: systemPrompt,
+          messages,
+        }),
+      });
 
-    // ── Engine init ────────────────────────────────────────
-    function onProgress(report) {
-      if (report.text) statusEl.textContent = report.text;
-      if (typeof report.progress === 'number') {
-        progressEl.style.width = Math.min(100, report.progress * 100).toFixed(1) + '%';
+      if (!res.ok) {
+        let msg = `API error ${res.status}`;
+        try {
+          const body = await res.json();
+          msg = body.error?.message || msg;
+          if (res.status === 401) msg = 'Invalid API key. Click ⚙ Key to update it.';
+        } catch (_) {}
+        throw new Error(msg);
+      }
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop() ?? '';
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const data = line.slice(6).trim();
+          if (data === '[DONE]') return;
+          try {
+            const evt = JSON.parse(data);
+            if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+              yield evt.delta.text;
+            }
+          } catch (_) {}
+        }
       }
     }
-
-    async function initEngine() {
-      try {
-        engine = await webllm.CreateMLCEngine(MODEL_ID, {
-          initProgressCallback: onProgress,
-        });
-        overlay.style.display = 'none';
-        btnGen.disabled = false;
-        window._appsnaprReady = true;
-      } catch (err) {
-        statusEl.textContent = '❌ ' + (err.message || 'Failed to load model');
-        console.error('[AppSnapr] Engine init error:', err);
-      }
-    }
-
-    initEngine();
 
     // ── Badge helper ───────────────────────────────────────
     function setActiveBadge(lang) {
@@ -590,17 +610,11 @@ Rules:
     }
 
     // ── Clean model output ─────────────────────────────────
-    // Models often wrap output in ```html ... ``` despite instructions.
-    // Strip fences, stray LANG: lines, and leading whitespace.
     function cleanCode(raw) {
       let s = raw.trim();
-      // Strip any leading LANG: line the streaming loop didn't catch
       s = s.replace(/^LANG:\s*\S+\s*\n?/i, '').trim();
-      // Strip opening fence: ```html, ```javascript, ``` etc.
       s = s.replace(/^```[\w]*\s*\n?/, '').trim();
-      // Strip closing fence
       s = s.replace(/\n?```\s*$/, '').trim();
-      // Truncate anything after </html> — catches trailing 0s and model noise
       const closeHtml = s.lastIndexOf('</html>');
       if (closeHtml !== -1) s = s.slice(0, closeHtml + 7);
       return s.trim();
@@ -647,11 +661,17 @@ Rules:
       document.getElementById('prompt-input').focus();
     };
 
+    // ── Load preview ───────────────────────────────────────
+    function loadPreview(code) {
+      const blob = new Blob([code], { type: 'text/html' });
+      const url  = URL.createObjectURL(blob);
+      if (previewFrame._blobUrl) URL.revokeObjectURL(previewFrame._blobUrl);
+      previewFrame._blobUrl = url;
+      previewFrame.src = url;
+    }
+
     // ── Generate ───────────────────────────────────────────
     async function generate(prompt) {
-      if (!engine) return;
-
-      // Reset UI
       btnGen.disabled      = true;
       btnGen.textContent   = '⏳ Generating...';
       btnDownload.disabled = true;
@@ -667,32 +687,22 @@ Rules:
       let langDetected = false;
 
       try {
-        const stream = await engine.chat.completions.create({
-          messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
-            { role: 'user',   content: 'Build this app: ' + prompt },
-          ],
-          stream:      true,
-          temperature: 0.25,
-          max_tokens:  4096,
-        });
+        const stream = streamCompletion(SYSTEM_PROMPT, [
+          { role: 'user', content: 'Build this app: ' + prompt },
+        ]);
 
-        for await (const chunk of stream) {
-          if (chunk.choices[0]?.finish_reason) break;
-          const delta = chunk.choices[0]?.delta?.content;
-          if (typeof delta !== 'string' || !delta) continue;
+        for await (const delta of stream) {
           buffer += delta;
 
-          // Detect LANG: header from first line
           if (!langDetected) {
-            const newlineIdx = buffer.indexOf('\n');
-            if (newlineIdx !== -1) {
-              const firstLine = buffer.slice(0, newlineIdx).trim();
+            const nl = buffer.indexOf('\n');
+            if (nl !== -1) {
+              const firstLine = buffer.slice(0, nl).trim();
               if (firstLine.startsWith('LANG:')) {
                 const tag = firstLine.replace('LANG:', '').trim().toLowerCase();
                 currentLang = (tag === 'js' || tag === 'javascript') ? 'js' : 'html';
                 setActiveBadge(currentLang);
-                buffer = buffer.slice(newlineIdx + 1);
+                buffer = buffer.slice(nl + 1);
               }
               langDetected = true;
             }
@@ -707,19 +717,12 @@ Rules:
         console.error('[AppSnapr] Generation error:', err);
       }
 
-      // Finalize — clean output, highlight, load live preview
       currentCode = cleanCode(currentCode);
       codePanel.classList.remove('streaming');
       highlightCode(currentLang);
 
-      // Use a Blob URL for the iframe — more reliable than srcdoc for local files
       if (currentCode) {
-        const blob = new Blob([currentCode], { type: 'text/html' });
-        const url  = URL.createObjectURL(blob);
-        // Revoke previous blob URL to avoid memory leaks
-        if (previewFrame._blobUrl) URL.revokeObjectURL(previewFrame._blobUrl);
-        previewFrame._blobUrl = url;
-        previewFrame.src = url;
+        loadPreview(currentCode);
         btnDownload.disabled = false;
       }
 
@@ -730,7 +733,7 @@ Rules:
 
     // ── Generate edit ──────────────────────────────────────
     async function generateEdit(request) {
-      if (!engine || !currentCode) return;
+      if (!currentCode) return;
 
       btnEdit.disabled    = true;
       btnEdit.textContent = '⏳ Editing...';
@@ -742,20 +745,11 @@ Rules:
       let buffer = '';
 
       try {
-        const stream = await engine.chat.completions.create({
-          messages: [
-            { role: 'system', content: EDIT_PROMPT },
-            { role: 'user',   content: `Current code:\n${currentCode}\n\nEdit request: ${request}` },
-          ],
-          stream:      true,
-          temperature: 0.2,
-          max_tokens:  4096,
-        });
+        const stream = streamCompletion(EDIT_PROMPT, [
+          { role: 'user', content: `Current code:\n${currentCode}\n\nEdit request: ${request}` },
+        ]);
 
-        for await (const chunk of stream) {
-          if (chunk.choices[0]?.finish_reason) break;
-          const delta = chunk.choices[0]?.delta?.content;
-          if (typeof delta !== 'string' || !delta) continue;
+        for await (const delta of stream) {
           buffer += delta;
           codeEl.textContent = buffer;
         }
@@ -765,18 +759,11 @@ Rules:
         console.error('[AppSnapr] Edit error:', err);
       }
 
-      // Finalize
       currentCode = cleanCode(buffer);
       codePanel.classList.remove('streaming');
       highlightCode(currentLang);
 
-      if (currentCode) {
-        const blob = new Blob([currentCode], { type: 'text/html' });
-        const url  = URL.createObjectURL(blob);
-        if (previewFrame._blobUrl) URL.revokeObjectURL(previewFrame._blobUrl);
-        previewFrame._blobUrl = url;
-        previewFrame.src = url;
-      }
+      if (currentCode) loadPreview(currentCode);
 
       btnEdit.disabled    = false;
       btnEdit.textContent = 'Apply ▶';
