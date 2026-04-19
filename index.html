@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AppSnapr — AI App Builder</title>
+  <title>AppSnapr — On-Device AI App Builder</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,69 +30,6 @@
       overflow: hidden;
     }
 
-    /* ── API Key screen ───────────────────────────────── */
-    #apikey-screen {
-      position: fixed;
-      inset: 0;
-      background: rgba(10,10,10,0.98);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      z-index: 100;
-      backdrop-filter: blur(4px);
-    }
-    #apikey-screen h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: linear-gradient(90deg, var(--cyan), var(--violet));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.06em;
-    }
-    #apikey-screen .apikey-sub {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-    #apikey-input {
-      width: 340px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 11px 14px;
-      color: var(--text);
-      font-size: 0.92rem;
-      outline: none;
-      font-family: 'Fira Code', monospace;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    #apikey-input:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px rgba(0,229,255,0.08);
-    }
-    #apikey-input::placeholder { color: #3a3a3a; }
-    #apikey-submit {
-      width: 340px;
-      background: linear-gradient(135deg, var(--cyan), var(--violet));
-      border: none;
-      border-radius: 8px;
-      padding: 11px 22px;
-      color: #000;
-      font-weight: 800;
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s;
-    }
-    #apikey-submit:hover { opacity: 0.9; transform: translateY(-1px); }
-    #apikey-note {
-      color: #3a3a3a;
-      font-size: 0.72rem;
-      max-width: 300px;
-      text-align: center;
-      line-height: 1.5;
-    }
-
     /* ── Header ───────────────────────────────────────── */
     header {
       display: flex;
@@ -112,15 +49,8 @@
       -webkit-text-fill-color: transparent;
       letter-spacing: 0.06em;
     }
-    .header-sub {
-      color: var(--muted);
-      font-size: 0.75rem;
-    }
-    .lang-badges {
-      display: flex;
-      gap: 7px;
-      margin-left: auto;
-    }
+    .header-sub { color: var(--muted); font-size: 0.75rem; }
+    .lang-badges { display: flex; gap: 7px; margin-left: auto; }
     .badge {
       padding: 3px 11px;
       border-radius: 20px;
@@ -132,30 +62,15 @@
       transition: all 0.25s ease;
     }
     .badge.active-html {
-      border-color: var(--cyan);
-      color: var(--cyan);
+      border-color: var(--cyan); color: var(--cyan);
       box-shadow: 0 0 10px rgba(0,229,255,0.25);
       background: rgba(0,229,255,0.06);
     }
     .badge.active-js {
-      border-color: var(--yellow);
-      color: var(--yellow);
+      border-color: var(--yellow); color: var(--yellow);
       box-shadow: 0 0 10px rgba(247,201,72,0.25);
       background: rgba(247,201,72,0.06);
     }
-    .btn-settings {
-      background: none;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--muted);
-      font-size: 0.7rem;
-      padding: 3px 9px;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-      font-family: inherit;
-      margin-left: 8px;
-    }
-    .btn-settings:hover { border-color: var(--violet); color: var(--violet); }
 
     /* ── Prompt bar ───────────────────────────────────── */
     .prompt-bar {
@@ -196,8 +111,7 @@
       letter-spacing: 0.02em;
     }
     .btn-generate:hover:not(:disabled) {
-      opacity: 0.92;
-      transform: translateY(-1px);
+      opacity: 0.92; transform: translateY(-1px);
       box-shadow: 0 4px 20px rgba(0,229,255,0.2);
     }
     .btn-generate:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
@@ -225,26 +139,11 @@
       transition: border-color 0.2s, color 0.2s, background 0.2s;
       font-family: inherit;
     }
-    .chip:hover {
-      border-color: var(--cyan);
-      color: var(--cyan);
-      background: rgba(0,229,255,0.05);
-    }
+    .chip:hover { border-color: var(--cyan); color: var(--cyan); background: rgba(0,229,255,0.05); }
 
     /* ── Panels ───────────────────────────────────────── */
-    .panels {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      min-height: 0;
-    }
-    .panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      min-width: 0;
-    }
+    .panels { display: flex; flex: 1; overflow: hidden; min-height: 0; }
+    .panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; min-width: 0; }
     .panel:first-child { border-right: 1px solid var(--border); }
 
     .panel-header {
@@ -268,7 +167,7 @@
       font-size: 0.72rem;
       padding: 4px 10px;
       cursor: pointer;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      transition: border-color 0.2s, color 0.2s;
       font-family: inherit;
       font-weight: 600;
     }
@@ -277,101 +176,76 @@
 
     /* ── Code panel ───────────────────────────────────── */
     #code-panel {
-      margin: 0;
-      border-radius: 0;
+      margin: 0; border-radius: 0;
       background: var(--code-bg);
-      flex: 1;
-      overflow: auto;
+      flex: 1; overflow: auto;
       padding: 16px 18px;
-      font-size: 0.8rem;
-      line-height: 1.65;
-      tab-size: 2;
+      font-size: 0.8rem; line-height: 1.65; tab-size: 2;
       min-height: 0;
     }
     #code-el {
       font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
-      white-space: pre-wrap;
-      word-break: break-word;
+      white-space: pre-wrap; word-break: break-word;
     }
     .streaming #code-el { color: #b0b0b0; }
-
-    .placeholder-msg {
-      color: var(--muted);
-      font-size: 0.82rem;
-      font-style: italic;
-      font-family: system-ui, sans-serif;
-    }
+    .placeholder-msg { color: var(--muted); font-size: 0.82rem; font-style: italic; font-family: system-ui, sans-serif; }
 
     /* ── Preview panel ────────────────────────────────── */
-    #preview-iframe {
-      flex: 1;
-      border: none;
-      background: #fff;
-      display: block;
-      min-height: 0;
-    }
+    #preview-iframe { flex: 1; border: none; background: #fff; display: block; min-height: 0; }
 
     .btn-download {
       background: linear-gradient(135deg, var(--cyan), var(--violet));
-      border: none;
-      border-radius: 7px;
-      padding: 8px 18px;
-      color: #000;
-      font-weight: 800;
-      font-size: 0.78rem;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s;
-      letter-spacing: 0.02em;
+      border: none; border-radius: 7px; padding: 8px 18px;
+      color: #000; font-weight: 800; font-size: 0.78rem; cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s; letter-spacing: 0.02em;
     }
     .btn-download:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
     .btn-download:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* ── Edit bar ────────────────────────────────────────── */
+    /* ── Loading overlay ──────────────────────────────── */
+    #loading-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,10,10,0.97);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 18px; z-index: 100; backdrop-filter: blur(4px);
+    }
+    #loading-overlay h2 {
+      font-size: 1.5rem; font-weight: 800;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: 0.06em;
+    }
+    #loading-overlay .loading-sub { color: var(--muted); font-size: 0.9rem; }
+    .progress-wrap { width: 340px; height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    #progress-bar {
+      height: 100%; width: 0%;
+      background: linear-gradient(90deg, var(--cyan), var(--violet));
+      border-radius: 3px; transition: width 0.3s ease;
+    }
+    #loading-status { color: #555; font-size: 0.78rem; min-height: 1.2em; max-width: 340px; text-align: center; line-height: 1.4; }
+    .loading-note { font-size: 0.72rem; color: #3a3a3a; max-width: 300px; text-align: center; line-height: 1.5; }
+
+    /* ── Edit bar ─────────────────────────────────────── */
     #edit-bar {
-      display: none;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 20px;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
+      display: none; align-items: center; gap: 10px;
+      padding: 10px 20px; background: var(--surface);
+      border-top: 1px solid var(--border); flex-shrink: 0;
     }
-    #edit-bar .edit-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--violet);
-      white-space: nowrap;
-      letter-spacing: 0.05em;
-    }
+    #edit-bar .edit-label { font-size: 0.75rem; font-weight: 700; color: var(--violet); white-space: nowrap; letter-spacing: 0.05em; }
     #edit-input {
-      flex: 1;
-      background: var(--bg);
-      border: 1px solid var(--violet);
-      border-radius: 8px;
-      padding: 9px 14px;
-      color: var(--text);
-      font-size: 0.9rem;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      font-family: inherit;
+      flex: 1; background: var(--bg); border: 1px solid var(--violet);
+      border-radius: 8px; padding: 9px 14px; color: var(--text);
+      font-size: 0.9rem; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s; font-family: inherit;
     }
-    #edit-input:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 0 3px rgba(168,85,247,0.12);
-    }
+    #edit-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(168,85,247,0.12); }
     #edit-input::placeholder { color: var(--muted); }
     #btn-edit {
       background: linear-gradient(135deg, var(--violet), var(--cyan));
-      border: none;
-      border-radius: 8px;
-      padding: 9px 20px;
-      color: #000;
-      font-weight: 800;
-      font-size: 0.86rem;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.15s;
-      white-space: nowrap;
-      font-family: inherit;
+      border: none; border-radius: 8px; padding: 9px 20px;
+      color: #000; font-weight: 800; font-size: 0.86rem; cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s; white-space: nowrap; font-family: inherit;
     }
     #btn-edit:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
     #btn-edit:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
@@ -384,24 +258,26 @@
 </head>
 <body>
 
-  <!-- ── API Key screen ─────────────────────────────────── -->
-  <div id="apikey-screen" style="display:none">
+  <!-- ── Loading overlay ───────────────────────────────── -->
+  <div id="loading-overlay">
     <h2>⚡ AppSnapr</h2>
-    <p class="apikey-sub">Enter your Anthropic API key to get started</p>
-    <input id="apikey-input" type="password" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false" />
-    <button id="apikey-submit">Start Building ▶</button>
-    <p id="apikey-note">Your key is stored in your browser only and sent directly to Anthropic's API.</p>
+    <p class="loading-sub">Loading AI model onto your device...</p>
+    <div class="progress-wrap"><div id="progress-bar"></div></div>
+    <div id="loading-status">Initializing...</div>
+    <p class="loading-note">
+      First visit downloads ~2 GB to your browser cache.<br>
+      After that, the model loads instantly — works offline.
+    </p>
   </div>
 
   <!-- ── Header ────────────────────────────────────────── -->
   <header>
     <h1>⚡ AppSnapr</h1>
-    <span class="header-sub">Claude AI &nbsp;·&nbsp; No server &nbsp;·&nbsp; Works everywhere</span>
+    <span class="header-sub">On-device AI &nbsp;·&nbsp; No account &nbsp;·&nbsp; No server</span>
     <div class="lang-badges">
       <span class="badge" id="badge-html">HTML</span>
       <span class="badge" id="badge-js">JS</span>
     </div>
-    <button class="btn-settings" id="btn-settings" title="Change API key">⚙ Key</button>
   </header>
 
   <!-- ── Prompt bar ─────────────────────────────────────── -->
@@ -431,8 +307,6 @@
 
   <!-- ── Main panels ────────────────────────────────────── -->
   <div class="panels">
-
-    <!-- Code panel -->
     <div class="panel">
       <div class="panel-header">
         <span>CODE</span>
@@ -440,8 +314,6 @@
       </div>
       <pre id="code-panel"><code id="code-el" class="language-html"><span class="placeholder-msg">Your generated code will appear here...</span></code></pre>
     </div>
-
-    <!-- Preview panel -->
     <div class="panel">
       <div class="panel-header">
         <span>LIVE PREVIEW</span>
@@ -449,7 +321,6 @@
       </div>
       <iframe id="preview-iframe" sandbox="allow-scripts allow-forms allow-modals"></iframe>
     </div>
-
   </div>
 
   <!-- ── Edit bar ──────────────────────────────────────────── -->
@@ -458,7 +329,7 @@
     <input
       id="edit-input"
       type="text"
-      placeholder='Tell Claude what to change — e.g. "make it dark mode", "add a reset button", "fix the bug where..."'
+      placeholder='Tell the bot what to change — e.g. "make it dark mode", "add a reset button"'
       autocomplete="off"
       spellcheck="false"
     />
@@ -467,141 +338,133 @@
 
   <!-- ── Main script ────────────────────────────────────── -->
   <script type="module">
+    import { pipeline, TextStreamer, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3/dist/transformers.min.js';
+
+    // ── Config ─────────────────────────────────────────────
+    // Qwen2.5-Coder-3B: best practical browser model, ~2GB q4, works on CPU/WASM
+    const MODEL_ID = 'onnx-community/Qwen2.5-Coder-3B-Instruct';
 
     // ── DOM refs ───────────────────────────────────────────
-    const apikeyScreen  = document.getElementById('apikey-screen');
-    const apikeyInput   = document.getElementById('apikey-input');
-    const apikeySubmit  = document.getElementById('apikey-submit');
-    const btnSettings   = document.getElementById('btn-settings');
-    const btnGen        = document.getElementById('btn-generate');
-    const codePanel     = document.getElementById('code-panel');
-    const codeEl        = document.getElementById('code-el');
-    const previewFrame  = document.getElementById('preview-iframe');
-    const btnDownload   = document.getElementById('btn-download');
-    const btnCopy       = document.getElementById('btn-copy');
-    const editBar       = document.getElementById('edit-bar');
-    const editInput     = document.getElementById('edit-input');
-    const btnEdit       = document.getElementById('btn-edit');
+    const overlay      = document.getElementById('loading-overlay');
+    const statusEl     = document.getElementById('loading-status');
+    const progressEl   = document.getElementById('progress-bar');
+    const btnGen       = document.getElementById('btn-generate');
+    const codePanel    = document.getElementById('code-panel');
+    const codeEl       = document.getElementById('code-el');
+    const previewFrame = document.getElementById('preview-iframe');
+    const btnDownload  = document.getElementById('btn-download');
+    const btnCopy      = document.getElementById('btn-copy');
+    const editBar      = document.getElementById('edit-bar');
+    const editInput    = document.getElementById('edit-input');
+    const btnEdit      = document.getElementById('btn-edit');
 
     // ── State ──────────────────────────────────────────────
-    let apiKey      = localStorage.getItem('appsnapr-api-key') || '';
+    let pipe        = null;
     let currentCode = '';
     let currentLang = 'html';
 
-    // ── API key management ─────────────────────────────────
-    function showKeyScreen() {
-      apikeyScreen.style.display = 'flex';
-      btnGen.disabled = true;
-      apikeyInput.value = '';
-      apikeyInput.focus();
-    }
-
-    function hideKeyScreen() {
-      apikeyScreen.style.display = 'none';
-      btnGen.disabled = false;
-    }
-
-    if (!apiKey) {
-      showKeyScreen();
-    } else {
-      hideKeyScreen();
-    }
-
-    apikeySubmit.addEventListener('click', saveKey);
-    apikeyInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveKey(); });
-
-    function saveKey() {
-      const key = apikeyInput.value.trim();
-      if (!key) return;
-      apiKey = key;
-      localStorage.setItem('appsnapr-api-key', key);
-      hideKeyScreen();
-    }
-
-    btnSettings.addEventListener('click', showKeyScreen);
-
     // ── System prompts ─────────────────────────────────────
-    const SYSTEM_PROMPT = `You are a senior web developer. Output a single self-contained HTML file for the requested app.
+    const SYSTEM_PROMPT = `You are an expert front-end engineer. Your only job is to output a single, fully self-contained HTML file.
 
-FORMAT RULES (critical):
-- Line 1: LANG: JS  (or LANG: HTML for purely static pages)
-- Line 2: <!DOCTYPE html>
-- Then: the complete HTML. Nothing else. No markdown fences, no explanation, no comments outside the code.
+OUTPUT FORMAT (non-negotiable):
+- First line must be exactly: LANG: JS   (for apps with JavaScript)  or  LANG: HTML  (for purely static pages)
+- Second line must be exactly: <!DOCTYPE html>
+- Then the rest of the HTML file.
+- Nothing else — no markdown code fences, no comments before the doctype, no explanation, no preamble.
 
-CODE RULES:
-- All CSS and JS must be inline inside the HTML file. Zero external dependencies.
-- Every feature must be fully implemented — no placeholders, no "TODO", no mock data.
-- The app must work perfectly the first time with no errors.
+TECHNICAL RULES:
+- All CSS and JavaScript must be inline inside the file. No external dependencies, no CDN links, no imports.
+- Every feature the user describes must be fully implemented. No placeholders, no "TODO", no stub functions, no fake data unless data is the point.
+- Use vanilla JS only. No React, no Vue, no jQuery.
+- All event listeners must be added via addEventListener, not inline onclick attributes.
+- Use const/let, arrow functions, async/await. No var.
+- Always check for null before accessing DOM elements.
+- LocalStorage keys must be namespaced (e.g. "appsnapr_todo_items") to avoid collisions.
 
-QUALITY RULES — this is the most important section:
-- Use a polished dark UI by default: dark backgrounds (#0f0f0f or similar), vibrant accent colors, smooth CSS transitions.
-- Typography: use system fonts or Google Fonts (loaded via @import in the <style> tag).
-- Layout: use CSS Grid or Flexbox properly. Everything must be aligned and spaced well.
-- Games: must have a game loop, score, game over screen, restart button, and responsive controls.
-- Tools/calculators: must have clear labels, input validation, and formatted output.
-- Timers: must actually count, have start/pause/reset, and display MM:SS format.
-- Lists/trackers: must support adding, completing, and deleting items, with data persisting via localStorage.
-- Every button must have a hover state. Every input must have a focus style.
-- No plain white backgrounds. No default browser styles left unstyled.`;
+DESIGN RULES:
+- Dark theme by default: background #0f0f0f or #111, surface #1a1a1a or #1e1e1e.
+- Accent color: choose one vibrant color that fits the app (cyan, violet, amber, green, etc.).
+- Typography: system-ui font stack. Clear hierarchy with font-weight and size contrast.
+- Spacing: generous padding (16px–24px). Elements must not feel cramped.
+- Every interactive element must have: a hover state, a focus-visible outline, and a disabled state.
+- Animations: subtle transitions (0.15s–0.25s ease) on hover/focus/state changes only. No pointless spinning.
+- Fully responsive: must look good and work on screens from 320px to 1920px wide.
 
-    const EDIT_PROMPT = `You are a web developer editing an existing single-file HTML app based on the user's request.
-Rules:
-1. Output ONLY the complete updated HTML file. Start directly with <!DOCTYPE html> — no LANG: header, no markdown fences, no explanation.
-2. Apply the requested change precisely. Keep everything else working exactly as it was.
-3. The entire file must remain fully functional after your edit.`;
+DOMAIN-SPECIFIC RULES:
+- Games: full game loop using requestAnimationFrame or setInterval. Real score tracking. Game-over screen with restart. Keyboard AND touch controls.
+- Calculators/converters: real-time calculation on every input change. Input validation with clear error states. Formatted output (commas, units, decimal precision).
+- Timers/stopwatches: accurate timing using Date.now() delta, not accumulated intervals. Start/pause/reset. Display MM:SS.ms or HH:MM:SS as appropriate.
+- To-do/list apps: add, edit inline, complete (checkbox), delete. Data persists via localStorage. Empty state with a helpful message.
+- Data/charts: use SVG or Canvas for visuals. Never use a chart library.
+- Forms: client-side validation with inline error messages. Success state after submit.
+- Text tools: real-time processing, copy-to-clipboard button, character/word count.
 
-    // ── SSE streaming helper ───────────────────────────────
-    async function* streamCompletion(systemPrompt, messages) {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-opus-4-7',
-          max_tokens: 16000,
-          stream: true,
-          system: systemPrompt,
-          messages,
-        }),
-      });
+BEFORE YOU OUTPUT:
+Mentally run through the app once. Ask yourself: does every button do something? Does every input affect state? Does the app look polished? If any answer is no, fix it before outputting.`;
 
-      if (!res.ok) {
-        let msg = `API error ${res.status}`;
-        try {
-          const body = await res.json();
-          msg = body.error?.message || msg;
-          if (res.status === 401) msg = 'Invalid API key. Click ⚙ Key to update it.';
-        } catch (_) {}
-        throw new Error(msg);
+    const EDIT_PROMPT = `You are an expert front-end engineer editing an existing single-file HTML app.
+
+OUTPUT FORMAT (non-negotiable):
+- Output ONLY the complete updated HTML file.
+- Start directly with <!DOCTYPE html> — no LANG: header, no markdown fences, no explanation.
+
+EDITING RULES:
+- Apply the requested change precisely and completely.
+- Preserve all existing functionality. Nothing that worked before should break.
+- If the change requires restructuring CSS or JS, do it cleanly — don't patch on top of bad structure.
+- If new interactive elements are added, give them proper hover/focus states.
+- Keep the same dark theme and design language as the original.`;
+
+    // ── Progress callback ──────────────────────────────────
+    function onProgress(p) {
+      if (p.status === 'progress' && typeof p.progress === 'number') {
+        progressEl.style.width = Math.min(100, p.progress).toFixed(1) + '%';
+        if (p.file) {
+          const mb = p.loaded ? ` (${(p.loaded / 1e6).toFixed(0)} MB)` : '';
+          statusEl.textContent = `Downloading model${mb}...`;
+        }
+      } else if (p.status === 'initiate') {
+        statusEl.textContent = 'Fetching model files...';
+      } else if (p.status === 'done') {
+        statusEl.textContent = 'Compiling...';
+      } else if (p.status === 'ready') {
+        statusEl.textContent = 'Ready!';
       }
+    }
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buf = '';
+    // ── Model init ─────────────────────────────────────────
+    async function initPipeline() {
+      // Try WebGPU first (fast), fall back to WASM (any browser/device)
+      const candidates = [
+        { device: 'webgpu', dtype: 'q4f16' },
+        { device: 'wasm',   dtype: 'q4'    },
+        { device: 'wasm',   dtype: 'auto'  },
+      ];
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buf += decoder.decode(value, { stream: true });
-        const lines = buf.split('\n');
-        buf = lines.pop() ?? '';
-        for (const line of lines) {
-          if (!line.startsWith('data: ')) continue;
-          const data = line.slice(6).trim();
-          if (data === '[DONE]') return;
-          try {
-            const evt = JSON.parse(data);
-            if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
-              yield evt.delta.text;
-            }
-          } catch (_) {}
+      let lastErr = '';
+      for (const { device, dtype } of candidates) {
+        try {
+          statusEl.textContent = `Trying ${device.toUpperCase()} (${dtype})...`;
+          pipe = await pipeline('text-generation', MODEL_ID, {
+            device,
+            dtype,
+            progress_callback: onProgress,
+          });
+          overlay.style.display = 'none';
+          btnGen.disabled = false;
+          console.log(`[AppSnapr] Running on ${device.toUpperCase()} dtype=${dtype}`);
+          return;
+        } catch (err) {
+          lastErr = err.message;
+          console.warn(`[AppSnapr] ${device}/${dtype} failed:`, err.message);
+          pipe = null;
         }
       }
+
+      statusEl.innerHTML = `❌ Failed to load model.<br><small style="color:#888">${lastErr.slice(0, 120)}</small><br><button onclick="location.reload()" style="margin-top:10px;padding:6px 16px;background:#222;border:1px solid #444;color:#ccc;border-radius:6px;cursor:pointer;">Retry</button>`;
     }
+
+    initPipeline();
 
     // ── Badge helper ───────────────────────────────────────
     function setActiveBadge(lang) {
@@ -622,8 +485,7 @@ Rules:
 
     // ── Syntax highlight ───────────────────────────────────
     function highlightCode(lang) {
-      const prismLang = lang === 'js' ? 'javascript' : 'markup';
-      codeEl.className = 'language-' + prismLang;
+      codeEl.className = 'language-' + (lang === 'js' ? 'javascript' : 'markup');
       codeEl.textContent = currentCode;
       if (window.Prism) Prism.highlightElement(codeEl);
     }
@@ -634,9 +496,7 @@ Rules:
       const blob = new Blob([currentCode], { type: 'text/html' });
       const url  = URL.createObjectURL(blob);
       const a    = Object.assign(document.createElement('a'), { href: url, download: 'app.html' });
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
+      document.body.appendChild(a); a.click(); a.remove();
       URL.revokeObjectURL(url);
     }
 
@@ -648,15 +508,14 @@ Rules:
       try {
         await navigator.clipboard.writeText(currentCode);
         btnCopy.textContent = 'Copied!';
-        setTimeout(() => { btnCopy.textContent = 'Copy'; }, 1600);
       } catch {
         btnCopy.textContent = 'Failed';
-        setTimeout(() => { btnCopy.textContent = 'Copy'; }, 1600);
       }
+      setTimeout(() => { btnCopy.textContent = 'Copy'; }, 1600);
     });
 
     // ── Fill prompt (called by chips) ──────────────────────
-    window.fillPrompt = function(text) {
+    window.fillPrompt = (text) => {
       document.getElementById('prompt-input').value = text;
       document.getElementById('prompt-input').focus();
     };
@@ -670,48 +529,78 @@ Rules:
       previewFrame.src = url;
     }
 
+    // ── Core streaming generation ──────────────────────────
+    async function runGeneration(messages, maxTokens, onToken) {
+      let buffer = '';
+      const streamer = new TextStreamer(pipe.tokenizer, {
+        skip_prompt: true,
+        skip_special_tokens: true,
+        callback_function: (text) => {
+          buffer += text;
+          onToken(buffer, text);
+        },
+      });
+
+      await pipe(messages, {
+        max_new_tokens: maxTokens,
+        do_sample: true,
+        temperature: 0.15,
+        top_p: 0.92,
+        repetition_penalty: 1.05,
+        streamer,
+      });
+
+      return buffer;
+    }
+
     // ── Generate ───────────────────────────────────────────
     async function generate(prompt) {
-      btnGen.disabled      = true;
-      btnGen.textContent   = '⏳ Generating...';
+      if (!pipe) return;
+
+      btnGen.disabled    = true;
+      btnGen.textContent = '⏳ Generating...';
       btnDownload.disabled = true;
-      codeEl.textContent   = '';
-      codeEl.className     = 'language-html';
+      codeEl.textContent = '';
+      codeEl.className   = 'language-html';
       codePanel.classList.add('streaming');
       currentCode = '';
       currentLang = 'html';
       setActiveBadge('');
       previewFrame.src = 'about:blank';
 
-      let buffer       = '';
-      let langDetected = false;
+      let displayBuffer = '';
+      let langDetected  = false;
 
       try {
-        const stream = streamCompletion(SYSTEM_PROMPT, [
-          { role: 'user', content: 'Build this app: ' + prompt },
-        ]);
-
-        for await (const delta of stream) {
-          buffer += delta;
-
-          if (!langDetected) {
-            const nl = buffer.indexOf('\n');
-            if (nl !== -1) {
-              const firstLine = buffer.slice(0, nl).trim();
-              if (firstLine.startsWith('LANG:')) {
-                const tag = firstLine.replace('LANG:', '').trim().toLowerCase();
-                currentLang = (tag === 'js' || tag === 'javascript') ? 'js' : 'html';
-                setActiveBadge(currentLang);
-                buffer = buffer.slice(nl + 1);
+        await runGeneration(
+          [
+            { role: 'system', content: SYSTEM_PROMPT },
+            { role: 'user',   content: 'Build this app: ' + prompt },
+          ],
+          8192,
+          (fullBuffer) => {
+            // Strip LANG: header from display buffer
+            if (!langDetected) {
+              const nl = fullBuffer.indexOf('\n');
+              if (nl !== -1) {
+                const firstLine = fullBuffer.slice(0, nl).trim();
+                if (firstLine.startsWith('LANG:')) {
+                  const tag = firstLine.replace('LANG:', '').trim().toLowerCase();
+                  currentLang = (tag === 'js' || tag === 'javascript') ? 'js' : 'html';
+                  setActiveBadge(currentLang);
+                  displayBuffer = fullBuffer.slice(nl + 1);
+                } else {
+                  displayBuffer = fullBuffer;
+                }
+                langDetected = true;
               }
-              langDetected = true;
+            } else {
+              displayBuffer = fullBuffer.replace(/^LANG:\s*\S+\s*\n?/i, '');
             }
+            currentCode = displayBuffer;
+            codeEl.textContent = displayBuffer;
           }
-
-          currentCode = buffer;
-          codeEl.textContent = buffer;
-        }
-
+        );
       } catch (err) {
         codeEl.textContent = '// Error: ' + err.message;
         console.error('[AppSnapr] Generation error:', err);
@@ -724,16 +613,16 @@ Rules:
       if (currentCode) {
         loadPreview(currentCode);
         btnDownload.disabled = false;
+        editBar.style.display = 'flex';
       }
 
       btnGen.disabled    = false;
       btnGen.textContent = 'Generate ▶';
-      if (currentCode) editBar.style.display = 'flex';
     }
 
     // ── Generate edit ──────────────────────────────────────
     async function generateEdit(request) {
-      if (!currentCode) return;
+      if (!pipe || !currentCode) return;
 
       btnEdit.disabled    = true;
       btnEdit.textContent = '⏳ Editing...';
@@ -742,24 +631,24 @@ Rules:
       codePanel.classList.add('streaming');
       previewFrame.src    = 'about:blank';
 
-      let buffer = '';
-
       try {
-        const stream = streamCompletion(EDIT_PROMPT, [
-          { role: 'user', content: `Current code:\n${currentCode}\n\nEdit request: ${request}` },
-        ]);
-
-        for await (const delta of stream) {
-          buffer += delta;
-          codeEl.textContent = buffer;
-        }
-
+        await runGeneration(
+          [
+            { role: 'system', content: EDIT_PROMPT },
+            { role: 'user',   content: `Current code:\n${currentCode}\n\nEdit request: ${request}` },
+          ],
+          8192,
+          (fullBuffer) => {
+            currentCode = fullBuffer;
+            codeEl.textContent = fullBuffer;
+          }
+        );
       } catch (err) {
         codeEl.textContent = '// Edit error: ' + err.message;
         console.error('[AppSnapr] Edit error:', err);
       }
 
-      currentCode = cleanCode(buffer);
+      currentCode = cleanCode(currentCode);
       codePanel.classList.remove('streaming');
       highlightCode(currentLang);
 
@@ -773,26 +662,26 @@ Rules:
 
     // ── Event wiring ───────────────────────────────────────
     btnGen.addEventListener('click', () => {
-      const prompt = document.getElementById('prompt-input').value.trim();
-      if (prompt) generate(prompt);
+      const p = document.getElementById('prompt-input').value.trim();
+      if (p) generate(p);
     });
 
     document.getElementById('prompt-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') {
-        const prompt = e.target.value.trim();
-        if (prompt && !btnGen.disabled) generate(prompt);
+        const p = e.target.value.trim();
+        if (p && !btnGen.disabled) generate(p);
       }
     });
 
     btnEdit.addEventListener('click', () => {
-      const request = editInput.value.trim();
-      if (request) generateEdit(request);
+      const r = editInput.value.trim();
+      if (r) generateEdit(r);
     });
 
     editInput.addEventListener('keydown', e => {
       if (e.key === 'Enter') {
-        const request = editInput.value.trim();
-        if (request && !btnEdit.disabled) generateEdit(request);
+        const r = editInput.value.trim();
+        if (r && !btnEdit.disabled) generateEdit(r);
       }
     });
   </script>
